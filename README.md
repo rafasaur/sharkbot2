@@ -1,124 +1,94 @@
-# Create Discord Bot
+# sharkbot (v2.0)
+"look at this dumb thing I made" - @rafasaur, June 2020
 
-[![Discord](https://discordapp.com/api/guilds/258167954913361930/embed.png)](https://discord.gg/WjEFnzC) [![Twitter Follow](https://img.shields.io/twitter/follow/peterthehan.svg?style=social)](https://twitter.com/peterthehan)
+"oh look, it's the same but different" - @rafasaur, October 2020
 
-Create Discord bots using a simple widget-based framework.
+"hey, look at this cool guy over here" - @rafasaur, April 2021
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/peterthehan/assets/master/repositories/create-discord-bot/npx-demo.gif" title="npx demo" alt="npx demo" />
-</div>
+This bot is very dumb and there are definitely bots that do things better, but he is my son and I love him very much. His [first iteration](https://github.com/rafasaur/sharkbot) was a little more straightforward, but when I was attempting to update to this version, I found [peterthehan](https://github.com/peterthehan/create-discord-bot) did what I wanted to do, only it worked out of the box.
 
-## Table of contents
+A few months later, after playing around with the widget base and pushing its/my limits, I decided to go a step further. In developing the `levels` and `member-db` widgets, I decided it would make more sense for them to come as a complete package, including their associated commands, so I wouldn't have to go looking in what felt like a disjointed way. So, widgets can now have their own `commands` folders, the contents of which will be loaded the same way they would in the main `/command/commands` folder.
 
-- [Getting started](#getting-started)
-  - [Setup bot](#setup-bot)
-  - [Create bot](#create-bot)
-- [Documentation](#documentation)
-  - [Updating](#updating)
-  - [Command widget](#command-widget)
-  - [Widget conventions](#widget-conventions)
-- [Widgets](#widgets)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
+## Implemented features
+Currently, Sharkbot can:
+- [x] alarm clock
+ - [x] a variety of sayings for default reminders
+- [x] assign/remove roles!
+- [x] react to messages, sometimes!
+- [x] affirm your friends!
+  - [x] a variety of affirmations (please submit more!)
+- [x] smooth members...?
+  - [x] a smoother smoothing experience
 
-## Getting started
+### In progress/to be implemented
+- [ ] the ability to add alarms...?
+- [ ] birthdays!
+- [ ] create polls
+  - [ ] with a time limit?
+  - [ ] choose your own emoji for polls?
+- [ ] twitch alerts
+- [ ] music streaming
 
-### Setup bot
+## Feature documentation
+All features are loaded via their widget folder. All features require a `<widget-name>-config.js` file with `active: true`, or the same in the root `config.js` file.
 
-1. Go to Discord's [Developer Portal](https://discordapp.com/developers/applications).
-2. Create a new application.
+### alarms
+The original code here was based on [peterthehan's](https://github.com/peterthehan/) [cron-bot](https://github.com/peterthehan/discord-cron-bot), so check documentation there for a more in-depth look at the basics.
+This widget will send messages to the specified channel at the specified times (via cron rules). The various options I've implemented allow for a random message to be sent from a list, tagging a person or group, and sending images.
 
-> Take note of your bot's client ID. You will need this to invite your bot to a server.
+### commands
+As mentioned above, all widgets can have their own set of commands. However, none will be loaded without this enabled. The commands I've left in here are mostly for fun, so please play around and add your own! peterthehan's implementation makes it super easy to do. The packaged commands are:
 
-3. Go to the bot tab and add a bot user to your application.
+#### affirm
+`!affirm` will send the author a random affirmation from `affirmations/affirmations.json`. Adding mentions (`@user`) after the command will send an affirmation to every member mentioned. I've considered also letting roles be @'d, but that seems dangerous.
 
-> Take note of your bot's token. You will need this in the next section.
+#### help
+`!help` sends a help message! Yep, that's it.
 
-4. Invite your bot to a server using: [https://discordapp.com/oauth2/authorize?scope=bot&client_id=DISCORD_BOT_CLIENT_ID_PLACEHOLDER](https://discordapp.com/oauth2/authorize?scope=bot&client_id=DISCORD_BOT_CLIENT_ID_PLACEHOLDER)
+#### roll
+A simple dice roller. Right now it'll roll whatever dice are listed (e.g., `!roll 2d4 3d6` would roll 2 d4's and 3 d6's) and give the sum. It might make more sense to do each group of dice individually, but also the user could just do that themself. It can also roll F\*rce and D\*stiny dice!
 
-> Alternatively, `npx peterthehan/create-discord-bot` will generate a bot invite link for you when you create a bot project and you provide a valid bot token.
+#### weekend
+It'll tell you if it's the weekend or not. Best paired with an enthusiastic gif.
 
-> A Discord bot's client ID is not the same as its token. Keep your token and any file containing it **private**. If your token ever leaks or you suspect it may have leaked, simply `regenerate` a new token to invalidate your compromised token.
+### haikus
+If a user sends a message that is a haiku, Sharkbot will reformat and repost it! Admittedly there are a few kinks being worked out. Also considering giving the option of adding a specific channel for the haikus to be posted.
 
-### Create bot
+### levels
+In some ways an extension of `member-db`, this widget controls the level progression of users as they spend time in the server. This has taken me a while to figure out how to implement in a way I like, but I think I finally have it organized in a way that makes sense and is readable. The widget keeps track of users' various doings, and levels up based on a set of rules in the corresponding `levelers/go##.js`. Each `go##.js` has a `prep` (what to do/what values to re/set when the user gets to level n), a `check` (checking to see if the user can level from n to n+1), an `approve` (for if the checked leveling needs mod approval), and a `denied` (what happens if the leveling is denied by a mod). Level IDs go in `levels-config.js`, and should be ordered from lowest/least privileged to highest/most privileged. Some commands implemented here:
 
-```
-npx peterthehan/create-discord-bot
-cd my-discord-bot/
-npm start
-```
+#### approve
+Used by a mod to approve a user if/when that time comes.
 
-Verify the bot is working by using the `.ping` command.
+#### levelup
+Flips a flag on that can allow further level progression.
 
-You're ready to create your own Discord bot! 🎉
+#### points
+TBA...
 
-## Documentation
+### log
+Enables message logging in the command window.
 
-### Updating
+### member-db
+Another widget that spent a while in development hell, mostly because I didn't understand how to use async functions properly (still don't). This widget gives the ability to write user info to a file, so that in the event of a crash/reboot, not everything is lost. In normal use this is probably not crucial (unless you really care about tracking nicknames?), but is vital for `levels` to function, as some functionality it adds is used by `levels`. I think it's best to write the files automatically with, say, `setInterval()` in `handlers/ready`, but you can also do it manually with the `!writedb` command.
 
-Update your core bot files to the latest version in this project by running `npx peterthehan/create-discord-bot` and entering the same name as your existing Discord bot when asked for the application name. This will update:
+### message-reacts
+Allows reacting and/or replying to messages given specific criteria. Examples are given in `handlers/message.js`.
 
-- [src/index.js](./app/src/index.js)
-- [src/core/](./app/src/core)
+### reaction-roles
+Again, the bones here are taken from a peterthehan widget, [reaction-role-bot](https://github.com/peterthehan/discord-reaction-role-bot). The implementation here is almost identical, but I'd avoid the `Unique` setting, since that doesn't seem to work consistently.
+Add to the rules in `reaction-roles-config.js` to allow members to react with specific emoji to certain messages to assign them roles.
 
-### Command widget
+### smooth
+Go ahead, try it. Smooth thyself.
+*successful smoothing not guaranteed*
 
-`create-discord-bot` includes a [command](./app/src/widgets/command) widget. Follow the design of the [ping](./app/src/widgets/command/commands/ping.js) command to start building your own commands.
+## Resources and references
+I call Sharkbot my son, but it would not have been possible without drawing on numerous examples and documentation from other discord bots, especially now that he is officially a fork of [peterthehan's create-discord-bot](https://github.com/peterthehan/create-discord-bot), and both alarms and reaction-roles come from their implementation as well (but have been updated slightly to ensure functionality and compatibility).
 
-### Widget conventions
+Sharkbot originally grew from the [Discord.JS guide](discordjs.guide), but I wanted a cleaner method of loading its various features, and calling functions from different events. My original thought was to have individual handlers for each event, but that quickly grew unwieldy as well, and needed more manual overhead than I wanted, and I still ended up with clunky and bloated looking files. Finding peterthehan's work was a godssend, especially after the 100th time I broke my event handlers. Everything is modular, which is exactly what I was aiming to do, and was the next step I was trying to wrestle with. In was worried at one point I was removing some modularity, but I think I have instead improved upon it.
 
-- All widgets **must** live under the [src/widgets/](./app/src/widgets) folder.
-- All widgets **must** have a `handlers` folder.
-- A `handlers` folder can **only** contain event handler files.
-- All event handler files **must** be named exactly the same as the events found on the [Client](https://discord.js.org/#/docs/main/master/class/Client) page.
+And of course the **biggest** thank you to everyone who's helped raise/test my son (Thad in particular) and answered my questions on the Discord.js discord.
 
-An example file tree diagram of these requirements may look like:
-
-```
-src/
-  widgets/
-    command/
-      handlers/
-        ready.js
-        message.js
-    widget1/
-      handlers/
-        messageReactionAdd.js
-        messageUpdate.js
-        other event handlers
-    widget2/
-      handlers/
-        typingStart.js
-        userUpdate.js
-        other event handlers
-```
-
-## Widgets
-
-The following widgets can be used by this framework by adding them into the [src/widgets/](./app/src/widgets) folder:
-
-- [https://github.com/peterthehan/discord-active-role-bot](https://github.com/peterthehan/discord-active-role-bot)
-- [https://github.com/peterthehan/discord-audit-log-bot](https://github.com/peterthehan/discord-audit-log-bot)
-- [https://github.com/peterthehan/discord-birthday-role-bot](https://github.com/peterthehan/discord-birthday-role-bot)
-- [https://github.com/peterthehan/discord-cron-bot](https://github.com/peterthehan/discord-cron-bot)
-- [https://github.com/peterthehan/discord-emoji-log-bot](https://github.com/peterthehan/discord-emoji-log-bot)
-- [https://github.com/peterthehan/discord-reaction-role-bot](https://github.com/peterthehan/discord-reaction-role-bot)
-- [https://github.com/peterthehan/discord-starboard-bot](https://github.com/peterthehan/discord-starboard-bot)
-- [https://github.com/peterthehan/discord-twitter-bot](https://github.com/peterthehan/discord-twitter-bot)
-
-## Troubleshooting
-
-- Use [Git Bash](https://git-scm.com/downloads) instead of the Command Prompt (cmd.exe) if you are on Windows.
-- `npm -v` to check if your npm version supports npx (v5.2+).
-- `node -v` to check if you have the latest LTS version of Node.js (v12+).
-- `npm install` if running the application outputs `Error: Cannot find module '...'`.
-
-Visit for more help or information!
-
-<a href="https://discord.gg/WjEFnzC">
-  <img src="https://discordapp.com/api/guilds/258167954913361930/embed.png?style=banner2" title="Discord server invite" alt="Discord server invite" />
-</a>
-
-## Contributing
-
-Read the [Contributing](./CONTRIBUTING.md) documentation to get started!
+### Dependencies
+Idk where else to put this. `alarms` requires `cron`. `haikus` requires `syllable`. Obviously the whole thing needs `discord.js`. I think that's it?

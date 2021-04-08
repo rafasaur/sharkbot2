@@ -1,3 +1,12 @@
-app/node_modules/
-app/token.json
-node_modules/
+.*
+node_modules
+common
+config.js*
+*-config.js*
+
+*jban*
+
+go23*
+go34*
+go45*
+go56*
