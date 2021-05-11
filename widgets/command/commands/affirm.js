@@ -1,9 +1,23 @@
 const CommandBuilder = require("../classes/CommandBuilder");
 
-const { affirmations } = require("./affirmations/affirmations.json");
+const { affirmations } = require("../affirmations.json");
 
 const randomVal = (array) => {
 	return array[Math.floor(Math.random() * array.length)]
+};
+
+const sendToUsers = (users) => {
+	users
+		.each( usr => {
+			usr.send(randomVal(affirmations))
+				.then(msg => console.log(`\t ${usr.tag} affirmed! Message: ${msg.content}`));
+	});
+};
+
+const sendToRoles = (roles) => {
+	roles
+		.filter( role => role.mentionable )
+		.each( role => sendToUsers(role.members.mapValues(member => member.user)) );
 };
 
 module.exports = new CommandBuilder()
@@ -17,21 +31,18 @@ module.exports = new CommandBuilder()
   .setDisabled(false)
   .setExecute(async (message, user, args) => {
     // message each member mentioned
-    if (message.mentions.users.array().length > 0) {
-			message.mentions.users
-				//.filter( usr => !usr.bot ) // make sure we're not DMing a bot
-				.each( usr => {
-					const affirmMsg = randomVal(affirmations);
-					usr.send(affirmMsg)
-					console.log(`\t ${usr.tag} affirmed! Message: ${affirmMsg}`);
-				});
-			//message.author.send("thanks for affirming your friends! <3");
+    if (
+			message.mentions.users.array().length > 0 ||
+			message.mentions.roles.array().length > 0
+		) {
+			if (message.mentions.users.array().length > 0) sendToUsers(message.mentions.users);
+			if (message.mentions.roles.array().length > 0) sendToRoles(message.mentions.roles);
+			//message.author.send("thanks for affirming your friends! ❤️");
     }
 		// or just message the sender
     else {
-			const affirmMsg = randomVal(affirmations);
-      message.author.send(affirmMsg);
-      console.log(`\t ${message.author.tag} self-affirmed! "${affirmMsg}"`);
+      user.send(randomVal(affirmations))
+				.then(msg => console.log(`\t ${user.tag} self-affirmed! "${msg.content}"`));
     }
 
     message.react('❤️')

@@ -27,7 +27,7 @@ const numberedRoll = (rolls) => {
     if (sum === 100) sum = '💯';
     else if (sum === 110) sum = message.guild.emojis.cache.find(emoji => emoji.name === '110') || 110;
     else if (sum === 69) sum = 'NICE';
-    else if (sum === 420) sum = 'blaze it';
+    else if (sum === 420) sum = message.guild.emojis.cache.find(emoji => emoji.name === 'weednumber') || 'blaze it';
 
     let msgReply = `rolling ${roll}...\n` + `>>> ${rollList.join(' + ')} = **${sum}**`;
     if (msgReply.length > 2000) {

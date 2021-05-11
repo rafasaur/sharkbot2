@@ -1,11 +1,15 @@
 const { GuildMember } = require("discord.js");
-const CooldownCache = require("../classes/CooldownCache");
 
-const modRoleIds = new Set(require("../command-config").modRoleIds);
+const { modRoleIds } = require("../command-config");
 
 module.exports = () => {
+
   GuildMember.prototype.isMod = function () {
-    return this.roles.cache.some( role => modRoleIds.has(role.id));
+    if (!modRoleIds || modRoleIds.length <= 0) return false;
+    
+    return this.roles.cache.map(role => role.id)
+            .filter(id => modRoleIds.includes(id))
+            .length > 0;
   };
 
 };

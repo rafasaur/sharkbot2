@@ -22,4 +22,5 @@ client.on("ready", async () => {
       type: "LISTENING"
     }
   });
+  console.log('');
 });

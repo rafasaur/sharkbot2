@@ -1,43 +1,42 @@
-const vintageUnsmooth = async (member, smoothed) => {
-  member.send("Welcome back!");
-  console.log(`${member.user.tag} is rough once more!`);
+const fs = require('fs'); const path = require('path');
 
-  const returnKing = smoothed[member.user.id];
+const smoothFilepath = '../smoothers.json'
 
+
+async function smoothWelcome (member, smoothed) {
+  const returnKing = smoothed[member.user.id]
   // add back each role that isn't @everyone
   console.log(`adding roles...`)
-  member.roles.add(returnKing.roles);
-
+  for (const roleID of smoothed[member.user.id].roles) {
+    if (roleID !== config.commands.smooth.ignoreID) {
+      console.log(`role ID = ${roleID}`);
+      try {
+        const role = member.guild.roles.cache.find(role => role.id === roleID);
+        await member.roles.add(role)
+        console.log(`\trole ${role.name} added`);
+      } catch (error) {console.error(error);}
+    }
+  }
   // set nickname
-  if (returnKing.nickname) {
-    await member.setNickname(returnKing.nickname);
+  if (smoothed[member.user.id].nickname) {
+    await member.setNickname(smoothed[member.user.id].nickname);
     console.log(`nickname set!`);
   }
-
   // and remove them from the smoothed log
   await delete smoothed[member.user.id];
-  await fs.writeFileSync(`./smoothed/smoothers.json`,JSON.stringify(smoothed));
-  console.log(`welcome back ${member.user.tag}!`);
-};
+  await fs.writeFileSync(smoothFilepath,JSON.stringify(smoothed));
+  console.log(`welcome back ${member.displayName}!`);
+}
 
 
-module.exports = (member) => {
-  try {
-    member.updateDataClient();
-    member.data.smoothed = false;
-  } catch (err) {
-    console.error(`member-db not enabled, vintage-ly unsmoothing\n\t${err}`);
+module.exports = async (member) => {
+  if (!fs.existsSync(smoothFilepath)) return fs.writeFileSync(smoothFilepath, '{}');
 
-  }
-
-  let smoothed = JSON.parse(fs.readFileSync(`../commands/smoothed/smoothers.json`,'utf8'));
-  if (smoothed && Object.keys(smoothed).includes(member.user.id)) {
-    console.log(`vintage unsmoothing!`);
-    return vintageUnsmooth(member, smoothed);
-  }
-
-  else if (member.client.smoothers[member.user.id]) {
-    console.log(`new unsmoothing!`);
-    return;
+  let smoothFile = await JSON.parse(fs.readFileSync(smoothFilepath));
+  if (member.user.id in smoothFile) {
+    member.send("Welcome back!");
+    console.log(`${member.displayName} is rough once more!`)
+    await smoothWelcome(member, smoothFile);
+    try { member.updateFromClient() } catch { () => null }
   }
 };

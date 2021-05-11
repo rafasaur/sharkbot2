@@ -1,4 +1,3 @@
-const { CronJob } = require("cron");
 const { MessageAttachment } = require("discord.js");
 
 const getRandomInt = (min, max) => {

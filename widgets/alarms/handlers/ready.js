@@ -1,3 +1,4 @@
+const { CronJob } = require("cron");
 const { timezone, rules } = require("../alarms-config.js").alarms;
 const CronBot = require(`../classes/CronBot`);
 

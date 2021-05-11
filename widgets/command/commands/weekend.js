@@ -2,6 +2,7 @@ const CommandBuilder = require("../../command/classes/CommandBuilder");
 const path = require("path");
 const {MessageAttachment} = require("discord.js");
 
+
 module.exports = new CommandBuilder()
   .setName("weekend")
   //.setAliases(["p", "pong"])
@@ -24,8 +25,7 @@ module.exports = new CommandBuilder()
         date.getDay() === 1 &&
         date.getHours() < 3
       ) ||
-      Math.random() < .069 ||
-      user.id === ''
+      Math.random() < .069 
     ) {
       const attachment = new MessageAttachment('./common/theweekend.gif');
       message.channel.send(attachment);

@@ -1,9 +1,11 @@
 const { GuildMember } = require("discord.js");
 
-const { levelIds } = require('../levels-config');
-const pronounRoleIds = new Set(Object.values(require("../../reaction-roles/reaction-roles-config").rules[0]["emojiRoleMap"]).flat());
-  // our server requires people to set pronoun roles, hence this clunky thing
-  // someday I'll make it neater
+const { levelIds, levelLogChId } = require('../levels-config');
+
+const pronounRole = require("../../reaction-roles/reaction-roles-config").rules.pronouns;
+const pronounRoleIds = new Set(Object.values(pronounRole.emojiRoleMap).flat());
+  // our server requires pronoun role/s to be set before leveling
+
 const getLevelFromRole = async (member) => {
   let setRoles = [];
   let level = 0;
@@ -31,8 +33,13 @@ const checkLevel0 = (member) => {
 };
 
 const approvalProcess = (member, level) => {
-  const atme = member.guild.members.cache.find(me => me.id === member.client.config.ownerId);
-  // blah blah send me a message w info
+  const logCh = member.guild.channels.resolve(levelLogChId);
+  logCh.send(
+    `${member.user.tag} (${member.nickname}) is leveling up `+
+    `from ${level} to ${level+1}! If input is needed for this process, ` +
+    `use either \`approve\` or \`deny\` + ${member.id} to complete it. `+
+    `Otherwise, congrats ${member.user.tag}!`
+  );
 };
 
 module.exports = (client) => {
@@ -42,26 +49,36 @@ module.exports = (client) => {
     const level = this.data.level;
     const levelRoleIds = [levelIds[level], levelIds[level+1]];
     this.data.levelUpReady = await require(`./levelers/levelUp`).check(this,levelRoleIds);
-    if (
-      this.data.levelUpReady &&
-      this.data.levelUpApproved
-    ) {
-      this.data.level = await require(`./levelers/levelUp`).approved(this,levelRoleIds);
-      return true;
+    if ( this.data.levelUpReady ) {
+      if ( this.data.levelUpApproved ) {
+        this.data.level = await require(`./levelers/levelUp`).approved(this,levelRoleIds);
+        return true;
+      }
+      else approvalProcess(this, level)
     }
-    approvalProcess(this,level);
     return false;
   };
+
 
   GuildMember.prototype.denyLevelUp = async function () {
     console.log(`${this.user.tag} level up denied`)
     return await require(`./levelers/levelUp`).denied(this);
   };
 
+
   GuildMember.prototype.preCheck = async function () {
-    if (!this.data) this.createBlankData();
+    if (!this.data || typeof(this.data) === 'undefined') this.createBlankData();
     this.data.level = await getLevelFromRole(this);
   };
+
+
+  GuildMember.prototype.updateFromMessage = async function (message) {
+    await this.preCheck();
+    this.data.sentMessages++;
+    this.data.sentChannels.add(message.channel.id);
+    this.checkLevelUp();
+  };
+
 
   GuildMember.prototype.createBlankData = function () {
     this.data = {};

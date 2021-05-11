@@ -1,19 +1,24 @@
-const fs = require('fs');
+const fs = require('fs'); const path = require('path');
 const CommandBuilder = require("../../command/classes/CommandBuilder");
 
-const smoothFilepath = `../smoothers.json`;
+async function smoothMember (channel,member) {
+	// open the book of the smooothed & write a new name
+	let smoothed = await JSON.parse(fs.readFileSync(`../smoothers.json`,'utf8'));
+	smoothed[member.user.id] = {};
+	smoothed[member.user.id]["roles"] = [];
+	smoothed[member.user.id]["nickname"] = member.nickname;
+	member.roles.cache.each(role => smoothed[member.user.id]['roles'].push(role.id));
 
-const vintageSmooth = async (member) => {
-  let smoothed = await JSON.parse(fs.readFileSync(smoothFilepath,'utf8'));
-	smoothed[member.id] = {};
-  smoothed[member.id]["id"] = member.id;
-  smoothed[member.id]["nickname"] = member.nickname;
-	smoothed[member.id]["roles"] = [];
-	member.roles.cache.each(role => smoothed[member.id]['roles'].push(role.id));
-	await fs.writeFileSync(smoothFilepath,JSON.stringify(smoothed,null,'\t'));
-  console.log(`smooth file written!`);
-};
+	// create & send invite to smoothed one
+	const invite = await channel.createInvite({maxUses:1})
+	await member.send("Congratulations, you've been smoothed. "+
+		"Rejoin here: https://discord.gg/"+invite.code);
 
+	// close the book & smooth
+	await fs.writeFileSync(`../smoothers.json`,JSON.stringify(smoothed,null,'\t'));
+	member.kick("s m o o t h   t h e   c h a t");
+	console.log(`${member.displayName} has been smoothed!`);
+}
 
 module.exports = new CommandBuilder()
   .setName("smooth")
@@ -25,23 +30,19 @@ module.exports = new CommandBuilder()
   .setCooldown(0)
   .setDisabled(false)
   .setExecute(async (message, user, args) => {
-    if (
-			user.isOwner() ||
-      !message.member
-		) { return console.log("couldn't smooth!") }
+		console.log(`\nsmoothing...`);
 
-    try {
-      await client.updateClientMemberData(message.member);
-    } catch (err) {
-      console.error(`member-db not enabled, vintage-ly smoothing\n\t${err}`);
-      await vintageSmooth(message.member);
+		// owner can't smooth themself!
+    if ( user.isOwner() ) {
+			console.log(`creator?! never!\n`);
+      message.reply('Creator! They who gave me Life! I would never!');
     }
 
-		const invite = await message.channel.createInvite( {maxUses:1, reason:`${user.username} smoothed`} )
-		await user.send(
-			`Congratulations, you've been smoothed. Rejoin here: https://discord.gg/${invite.code}`
-		);
-		await message.member.kick("s m o o t h   t h e   c h a t");
-		console.log(`${user.tag} has been smoothed!`);
-		message.react(client.emoji.smooth);
+		// all set, smooth ahead!
+		else {
+			try { message.member.updateClient() } catch { () => null }
+			smoothMember(message.channel,message.member);
+			message.react(message.client.emoji.smooth);
+		}
+
   });

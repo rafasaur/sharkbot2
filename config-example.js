@@ -1,13 +1,37 @@
 module.exports = {
   token: "", // your token here!
-  ownerId: "", // probably should be your user id
+  ownerIds: ["197687298198863872"], ownerTag: 'rafasaur#8320', // your infos here!
   widgets: {
     alarms: {
-      active: false
+      active: false,
     },
     command: {
-      active: true
+      prefixes: ["."],
+      modRoleIds: [],
     },
-    
+    haiku: {
+      active: false,
+      ignoredChannels: new Set([]),
+      alwaysChannels: new Set([]),
+    },
+    levels: {
+      active: true,
+      levelIds: [],
+    },
+    log: {
+      active: true,
+    },
+    "member-db": {
+      actvie: true,
+    },
+    "message-reacts": {
+      active: true,
+    },
+    "reaction-roles": {
+      active: true,
+    },
+    smooth: {
+      active: true,
+    }
   }
 };

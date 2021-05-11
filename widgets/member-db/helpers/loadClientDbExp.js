@@ -19,7 +19,6 @@ const prepMemberForDb = async (member) => {
   });
   thisMember.roleList = [];
   await member.roles.cache.each( role => thisMember.roleList.push(role.id));
-  console.log(thisMember);
 
   return thisMember;
 };
@@ -46,7 +45,7 @@ module.exports = (client) => {
     await guild.members.cache.each( async (mem) => {
       await client.updateClientMemberData(mem);
     });
-    console.log(client.guildDbs[guild.id]);
+    //console.log(client.guildDbs[guild.id]);
     return client.guildDbs[guild.id];
   };
 
@@ -58,10 +57,14 @@ module.exports = (client) => {
     client.guildDbs[member.guild.id][member.id] = await prepMemberForDb(member);
   };
 
+  GuildMember.prototype.updateClient = async () => {
+    await this.client.updateClientMemberData(this);
+  }
+
   GuildMember.prototype.updateFromClient = async () => {
     const guild = this.guild;
     const memberData = this.client.guildDbs[guild.id][this.id]
-    if (!memberData) return;
+    if (!memberData) return false;
 
     if (!this.data) this.createBlankData();
     Object.keys(memberData).forEach( (key) => {
@@ -75,5 +78,6 @@ module.exports = (client) => {
         await member.roles.add(roleId);
       });
     }
+    return true;
   };
 };

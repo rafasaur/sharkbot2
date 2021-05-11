@@ -1,4 +1,4 @@
-const updateUserFromUpdate = async (member) => {
+const updateFromUpdate = async (member) => {
   await member.preCheck();
   member.checkLevelUp();
 }

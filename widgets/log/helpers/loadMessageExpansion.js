@@ -2,6 +2,7 @@ const fs = require("fs");
 const { Message } = require("discord.js");
 
 module.exports = () => {
+
   Message.prototype.log = function () {
     const timestamp = new Date().toISOString();
     let authorLvl = '';

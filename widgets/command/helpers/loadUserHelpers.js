@@ -1,8 +1,8 @@
 const { User } = require("discord.js");
 const CooldownCache = require("../classes/CooldownCache");
 
-module.exports = () => {
-  const ownerIds = new Set(require("../command-config").ownerIds);
+module.exports = (client) => {
+  const ownerIds = new Set(client.config.ownerIds);
 
   User.prototype.isOwner = function () {
     return ownerIds.has(this.id);
