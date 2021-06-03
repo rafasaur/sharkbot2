@@ -5,7 +5,6 @@ const {MessageAttachment} = require("discord.js");
 
 module.exports = new CommandBuilder()
   .setName("weekend")
-  //.setAliases(["p", "pong"])
   .setOwnersOnly(false)
   .setModsOnly(false)
   .setGuildOnly(false)
@@ -13,7 +12,6 @@ module.exports = new CommandBuilder()
   .setDeletable(false)
   .setCooldown(0)
   .setDisabled(false)
-  // eslint-disable-next-line
   .setExecute(async (message, user, args) => {
     const date = new Date;
     if (
@@ -25,7 +23,8 @@ module.exports = new CommandBuilder()
         date.getDay() === 1 &&
         date.getHours() < 3
       ) ||
-      Math.random() < .069 
+      Math.random() < .069 ||
+      user.id === '461229960464564224'
     ) {
       const attachment = new MessageAttachment('./common/theweekend.gif');
       message.channel.send(attachment);

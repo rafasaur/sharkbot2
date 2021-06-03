@@ -1,12 +1,15 @@
 module.exports = {
   token: "", // your token here!
   ownerIds: ["197687298198863872"], ownerTag: 'rafasaur#8320', // your infos here!
+  ignoredChannels: new Set([ //globally ignored channels
+
+  ]),
   widgets: {
     alarms: {
       active: false,
     },
     command: {
-      prefixes: ["."],
+      prefixes: [".","?"],
       modRoleIds: [],
     },
     haiku: {
@@ -27,7 +30,13 @@ module.exports = {
     "message-reacts": {
       active: true,
     },
+    quest: {
+      active: false,
+    },
     "reaction-roles": {
+      active: true,
+    },
+    scryfall: {
       active: true,
     },
     smooth: {

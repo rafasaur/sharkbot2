@@ -1,10 +1,10 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs");  const path = require("path");
 const mainConfig = require(`../config`);
 
 const checkActiveWidget = (widgetName) => {
   const thisConfig = require(`../widgets/${widgetName}/${widgetName}-config`);
   return (
+    widgetName === 'command' || // commands always active
     (mainConfig.widgets.widgetName && mainConfig.widgets.widgetName.active) ||
     (thisConfig && thisConfig.active)
   )
@@ -31,8 +31,19 @@ const groupByHandlerName = (handlerMap, { handlerName, handler }) => {
 
 module.exports = () => {
   const widgetNames = getFilenames("../widgets");
-  console.log(`widgets found: ${widgetNames.join(", ")}\n`);
-    
+  let nWidgets = widgetNames.length;
+  //console.log(`widgets found: ${widgetNames.join(", ")}\n`);
+
+  let widgetLog = `\n${nWidgets} widgets found:\n\n`;
+  widgetNames.forEach( name => {
+    let logName = `${name}:`;
+    for (let i=0; i < 2-(name.length+1)/8; i++) logName += '\t';
+    if (checkActiveWidget(name)) return widgetLog += logName + 'enabled\n';
+    nWidgets--;
+    return widgetLog += logName +`disabled\n`;
+  });
+  console.log(widgetLog+`\n\nloading ${nWidgets} widgets...\n`);
+
   return widgetNames
     .filter(checkActiveWidget)
     .map(getHandlerFilePath)

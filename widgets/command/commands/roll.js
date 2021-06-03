@@ -148,4 +148,11 @@ module.exports = new CommandBuilder()
       .forEach( msg => {
         message.reply(msg);
       })
+  })
+  .setHelp(async (message, user, args) => {
+    return await message.reply(
+      `Roll some dice! ` +
+      `Try with normal sided dice (e.g., \`roll 3d6\`) ` +
+      `or with Force & Destiny dice (e.g., \`roll 2dpurple 2dgreen 1dblue\`)`
+    );
   });

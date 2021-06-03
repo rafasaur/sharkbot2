@@ -1,6 +1,7 @@
 
 module.exports = class Inventory {
-  constructor(){
+  constructor(member){
+    this.member = member;
     this.points = 0;
     this.items = {};
     this.cursed = false;
@@ -10,14 +11,22 @@ module.exports = class Inventory {
     return message.reply(`you have ${this.points} points!`);
   }
 
+  updateData(){
+    if (!this.member.data) this.member.createBlankData();
+    this.member.data.points = this.points;
+  }
+
   addPoints(income){
     this.points += income;
+    this.updateData();
     return this.points;
   }
 
   spendPoints(outcome){
+    if (this.member.user.isOwner() || this.member.isMod()) return this.points;
     if (outcome > this.points) return false;
     this.points -= outcome;
+    this.updateData();
     return this.points;
   }
 

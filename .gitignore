@@ -1,7 +1,10 @@
 .*
+!*.git
+
 *.bak
 node_modules
-common
+common/*.*
+!/common/
 config.js*
 *-config.js*
 
@@ -11,3 +14,7 @@ go23*
 go34*
 go45*
 go56*
+
+**/rules/*.js*
+
+!*example.js*

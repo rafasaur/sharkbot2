@@ -9,8 +9,9 @@ module.exports = class CommandBuilder {
     this.deletable = false;
     this.cooldown = Infinity;
     this.disabled = true;
-    // eslint-disable-next-line
     this.execute = async () => {};
+    this.help = async () => {};
+    this.canHelp = false;
   }
 
   setName(name) {
@@ -63,6 +64,12 @@ module.exports = class CommandBuilder {
     return this;
   }
 
+  setHelp(help) {
+    this.help = help;
+    this.canHelp = true;
+    return this;
+  }
+
   build() {
     return {
       name: this.name,
@@ -74,6 +81,8 @@ module.exports = class CommandBuilder {
       cooldown: this.cooldown,
       disabled: this.disabled,
       execute: this.execute,
+      help: this.help,
+      canHelp: this.canHelp,
     };
   }
 };

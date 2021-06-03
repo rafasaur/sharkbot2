@@ -32,8 +32,8 @@ const checkLevel0 = (member) => {
   }
 };
 
-const approvalProcess = (member, level) => {
-  const logCh = member.guild.channels.resolve(levelLogChId);
+const approvalProcess = async (member, level) => {
+  const logCh = await member.guild.channels.resolve(levelLogChId);
   logCh.send(
     `${member.user.tag} (${member.nickname}) is leveling up `+
     `from ${level} to ${level+1}! If input is needed for this process, ` +
@@ -69,6 +69,7 @@ module.exports = (client) => {
   GuildMember.prototype.preCheck = async function () {
     if (!this.data || typeof(this.data) === 'undefined') this.createBlankData();
     this.data.level = await getLevelFromRole(this);
+    return;
   };
 
 

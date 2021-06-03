@@ -28,4 +28,14 @@ module.exports = () => {
 
     return new Executable(this, this.author, command, args);
   };
+
+  Message.prototype.manualExecutable = function(commandString, args='') {
+    const command = this.getCommand(commandString.toLowerCase());
+    return new Executable(this,this.author,command,args);
+  };
+
+  Message.prototype.getHelp = function(commandString, args='') {
+    const command = this.getCommand(commandString.toLowerCase());
+    return new Helpable(this,this.author,command,args);
+  }
 };

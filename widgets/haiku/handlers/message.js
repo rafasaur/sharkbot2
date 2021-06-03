@@ -9,6 +9,7 @@ module.exports = async (message) => {
   if (
     !config.active ||
     message.author.bot ||
+    message.client.config.ignoredChannels.has(message.channel.id) ||
     message.client.widgets.haiku.ignoredChannels.has(message.channel.id) ||
     message.client.widgets.haiku.tempChannels.has(message.channel.id) ||
     (

@@ -1,4 +1,4 @@
-const CommandBuilder = require("../classes/CommandBuilder");
+const CommandBuilder = require("../../command/classes/CommandBuilder");
 
 const { affirmations } = require("../affirmations.json");
 
@@ -46,4 +46,7 @@ module.exports = new CommandBuilder()
     }
 
     message.react('❤️')
-  });
+  })
+	.setHelp(async (message, user, args) => {
+		message.channel.send('affirm yourself or your friends!');
+	});

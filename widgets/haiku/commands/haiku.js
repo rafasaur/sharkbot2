@@ -25,7 +25,6 @@ module.exports = new CommandBuilder()
   .setDeletable(false)
   .setCooldown(10)
   .setDisabled(false)
-  // eslint-disable-next-line
   .setExecute(async (message, user, args) => {
     const arg0 = args.shift();
     const chName = message.isFromTextChannel() ? `${message.channel.name}` : `${message.author.tag}'s DM`
@@ -47,10 +46,10 @@ module.exports = new CommandBuilder()
     }
 
     // unpause a haiku in a channel (can't unpause hardcoded channels)
-    else if (['unpause','go','on'].includes(arg0)) {
+    else if (['unpause','u','go','on'].includes(arg0)) {
       if (
-        config.active && message.client.widgets.haiku.active
-        //&& !defIgnoredChannels.has(message.channel.id)
+        config.active && message.client.widgets.haiku.active &&
+        message.client.widgets.haiku.tempChannels.has(message.channel.id);
       ) {
         message.react('📣');
         message.client.widgets.haiku.tempChannels.delete(message.channel.id);
@@ -67,4 +66,9 @@ module.exports = new CommandBuilder()
       }
       message.reply(wordSylList.join('\n'));
     }
+  })
+  .setHelp(async (message, user, args) => {
+    return await message.reply(
+      `\`h pause\` or \`h upause\` haiku in the channel in which they're called.`
+    )
   });

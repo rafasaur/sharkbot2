@@ -5,7 +5,7 @@ module.exports = async (message) => {
   if ( !message.author.isUser() || !message.isUserMessage() ) {
     return;
   }
-  console.log(message.channel.type)
+  
   if (
     config.ccDM &&
     message.channel.type === 'dm' &&

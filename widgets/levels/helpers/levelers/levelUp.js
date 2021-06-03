@@ -31,7 +31,7 @@ module.exports = {
   },
 
   denied: (member) => {
-    require(`./go${level}${level+1}`).denied(member);
+    require(`./go{level}${level+1}`).denied(member);
     return;
   },
 };

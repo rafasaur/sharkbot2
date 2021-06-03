@@ -7,16 +7,7 @@ module.exports = class Executable {
   }
 
   log() {
-    const timestamp = new Date().toISOString();
-    const logMessage = [
-      //`${timestamp.substring(0, 10)} ${timestamp.substring(11, 19)}`,
-      //this.message.isFromTextChannel()
-      //  ? `${this.message.guild} #${this.message.channel.name}`
-      //  : "DM",
-      `COMMAND CALLED: ${this.command.name} by ${this.user.tag}: ${this.message.content}`,
-    ];
-
-    console.log(logMessage.join(" | "));
+    console.log(`\tCOMMAND CALLED: ${this.command.name} by ${this.user.tag}`);
   }
 
   isExecutable() {

@@ -1,5 +1,3 @@
-// aspects of this module from https://github.com/scryfall/servo/
-
 const fetch = require('node-fetch')
 const { apiUrl, responseTypes, useOldArt } = require('../scryfall-config');
 const {compareTwoStrings} = require('string-similarity');
