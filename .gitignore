@@ -1,20 +1,17 @@
-.*
-!*.git
-
-*.bak
+.gitignore
+.git
 node_modules
-common/*.*
-!/common/
-config.js*
-*-config.js*
+.env
+*.bak*
+.config/*
+.rules/*/*
+assets/*/*
 
-*jban*
+**/tiktok-embed
 
-go23*
-go34*
-go45*
-go56*
+!*example*
+!*EXAMPLE*
 
-**/rules/*.js*
-
-!*example.js*
+!.rules/levels/go[0-1][1-2].js
+!assets/bj/bj0.gif
+!assets/weekend/theweekend.gif
