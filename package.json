@@ -1,15 +1,22 @@
 {
   "name": "sharkbot2",
-  "version": "1.13.0",
+  "version": "1.22.0",
   "description": "a modular simp bot for discord friends",
   "main": "src/index.js",
   "dependencies": {
-    "discord.js": "^13.3.0",
+    "@discordjs/builders": "^0.10.0",
+    "@discordjs/rest": "^0.2.0-canary.0",
+    "canvas": "^2.8.0",
+    "discord-api-types": "^0.26.0",
+    "discord.js": "^13.4.0",
     "dotenv": "^10.0.0",
+    "fs-extra": "^10.0.0",
+    "lodash": "^4.17.21",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "string-similarity": "^4.0.4",
-    "syllable": "^4.1.0"
+    "syllable": "^4.1.0",
+    "syllarhyme": "^1.0.1"
   },
   "scripts": {
     "test": "!ping"

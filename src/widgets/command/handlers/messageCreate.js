@@ -13,7 +13,7 @@ module.exports = async (message) => {
   }
 
   await executable.execute();
-  console.log("executing...")
+  console.log("\texecuting...")
   if (!executable.isDeletable()) {
     return;
   }

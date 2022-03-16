@@ -2,9 +2,10 @@ const { Message } = require("discord.js");
 const Executable = require("../classes/Executable");
 const Helpable = require("../classes/Helpable");
 
+
 module.exports = () => {
-  Message.prototype.isFromTextChannel = function () {
-    return this.channel.type === "GUILD_TEXT";
+  Message.prototype.isFromGuildChannel = function () {
+    return this.channel.type.startsWith("GUILD_");
   };
 
   Message.prototype.isUserMessage = function () {
@@ -12,14 +13,20 @@ module.exports = () => {
   };
 
   Message.prototype.isCommand = function () {
-    return this.client.prefixRegExp.test(this.content);
+    const commandString = this.content.replace(this.client.prefixRegExp, "").split(/ +/)[0].toLowerCase();
+    return (
+      this.client.prefixRegExp.test(this.content) && (
+        this.client.commands.has(commandString) ||
+        this.client.commands.some(command => command.aliases.has(commandString))
+    ))
   };
 
   Message.prototype.getCommand = function (commandString) {
-    return (
+    this.command = (
       this.client.commands.get(commandString) ||
       this.client.commands.find((command) => command.aliases.has(commandString))
     );
+    return this.command;
   };
 
   Message.prototype.createExecutable = function () {
@@ -40,7 +47,7 @@ module.exports = () => {
     return new Helpable(this, this.author, command, args);
   };
 
-/**
+/* MOVED TO loadMemberHelpers.js
   Message.prototype.authorIsMod = function() {
     const modRoleIds = this.client.getConfig().modRoleIds;
     if (!modRoleIds || modRoleIds.length <= 0) return false;

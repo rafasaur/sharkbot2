@@ -7,7 +7,7 @@ function randInt(max, min=0) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-function randWeight(objectArray) {
+function randWeight(objectArray) { // files like [ [files, weight], [files, weight], ...]
   let total = 0;
   objectArray.forEach(ind => total += objectArray.weight);
   const roll = Math.random() * total;
@@ -91,13 +91,13 @@ module.exports = class Alarm {
     let files = [];
 
     if (!rule?.files || rule.files.length === 0) {
-      return ch.send({content: await this._getContent(ch, rule)});
+      return await ch.send({content: await this._getContent(ch, rule)});
     }
     else if (!rule?.content || rule.content.length === 0) {
-      return ch.send({files: await this._getFiles(rule)});
+      return await ch.send({files: await this._getFiles(rule)});
     }
     else {
-      return ch.send({
+      return await ch.send({
         content: await this._getContent(ch, rule),
         files: await this._getFiles(rule)
       });

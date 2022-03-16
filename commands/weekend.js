@@ -32,12 +32,12 @@ module.exports = new CommandBuilder()
     const date = new Date;
     const roll = Math.random();
 
-    if ( user.id === '' ) { // moss exempt from all shenanigans
-      message.channel.send({files:getFiles(craigSnl)});
+    if ( user.id === '461229960464564224' ) { // moss exempt from all shenanigans
+      await message.channel.send({files:getFiles(craigSnl)});
     }
 
     else if ( roll > .9931 ) { // always a small chance for horse plinko
-      message.channel.send({files:getFiles(hplinko)});
+      await message.channel.send({files:getFiles(hplinko)});
     }
 
     else if ( // Sunday, and early Monday morning are straightforward
@@ -46,14 +46,14 @@ module.exports = new CommandBuilder()
         date.getHours() < 3
       )
     ) {
-      message.channel.send({files:getFiles(craigSnl)});
+      await message.channel.send({files:getFiles(craigSnl)});
     }
 
     else if ( // Saturday has a chance for Wickie
       date.getDay() === 6
     ) {
-      if (roll < .2) message.channel.send({files:getFiles(wickieSat)});
-      else message.channel.send({files:getFiles(craigSnl)});
+      if (roll < .2) await message.channel.send({files:getFiles(wickieSat)});
+      else await message.channel.send({files:getFiles(craigSnl)});
     }
 
     else if ( // Friday, broken up by time
@@ -62,40 +62,40 @@ module.exports = new CommandBuilder()
       if ( // before 9: diddy or krabs
         date.getHours() < 9
       ) {
-        if (roll < .5) message.channel.send({files:getFiles(diddyDay)});
-        else message.channel.send({files:getFiles(sailerFri)});
+        if (roll < .5) await message.channel.send({files:getFiles(diddyDay)});
+        else await message.channel.send({files:getFiles(sailerFri)});
       }
       else if ( // between 9 - 5pm: diddy, krabs, or craig
         date.getHours() > 9 &&
         date.getHours() < 17
       ) {
-        if ( roll < .2 ) message.channel.send({files:getFiles(diddyDay)});
-        else if (roll < .4) message.channel.send({files:getFiles(sailerFri)});
-        else message.channel.send({files:getFiles(craigSnl)});
+        if ( roll < .2 ) await message.channel.send({files:getFiles(diddyDay)});
+        else if (roll < .4) await message.channel.send({files:getFiles(sailerFri)});
+        else await message.channel.send({files:getFiles(craigSnl)});
       }
       else { // after 5, fri    day    night is in play
-        if ( roll < .1 ) message.channel.send({files:getFiles(diddyDay)});
-        else if ( roll < .2 ) message.channel.send({files:getFiles(sailerFri)});
-        else if ( roll < .8 ) message.channel.send({files:getFiles(craigSnl)});
+        if ( roll < .1 ) await message.channel.send({files:getFiles(diddyDay)});
+        else if ( roll < .2 ) await essage.channel.send({files:getFiles(sailerFri)});
+        else if ( roll < .8 ) await message.channel.send({files:getFiles(craigSnl)});
         else {
           const newRoll = Math.random();
-          if ( newRoll < .4 ) message.channel.send({files:getFiles(ityslFn0)});
-          else if ( newRoll < .7 ) message.channel.send({files:getFiles(ityslFn1)});
-          else if ( newRoll < .9 ) message.channel.send({files:getFiles(ityslFn3)});
-          else message.channel.send({files:getFiles(ityslFn2)});
+          if ( newRoll < .4 ) await message.channel.send({files:getFiles(ityslFn0)});
+          else if ( newRoll < .7 ) await message.channel.send({files:getFiles(ityslFn1)});
+          else if ( newRoll < .9 ) await message.channel.send({files:getFiles(ityslFn3)});
+          else await message.channel.send({files:getFiles(ityslFn2)});
         }
       }
     }
 
     else if ( roll < .069 ) { // small chance for the weekend during the week
-      message.channel.send({files:getFiles(craigSnl)});
+      await message.channel.send({files:getFiles(craigSnl)});
     }
 
     else if ( roll > .95 ) { // chance for horse plinko during the week
-      message.channel.send({files: getFiles(hplinko)});
+      await message.channel.send({files: getFiles(hplinko)});
     }
 
     else {
-      message.channel.send({content:"It is not the weekend :("});
+      await message.channel.send({content:"It is not the weekend :("});
     }
   });

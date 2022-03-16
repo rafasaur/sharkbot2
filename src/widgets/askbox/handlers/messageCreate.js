@@ -1,8 +1,7 @@
 
 function containsAnon (text, anons) {
   const word0 = text.split(' ')[0];
-  return anons.map(str => '['+str+']')
-              .includes(word0)
+  return anons.map(str => '['+str+']').includes(word0);
 }
 
 module.exports = async (message) => {
@@ -12,22 +11,36 @@ module.exports = async (message) => {
     message.member.isMod()
   ) return;
 
-  let newContent = '';
+  if (!config.sendToChId && !config.ccToDM) {
+    message.author.send(`askbox is not functioning at the moment! Please DM a mod`)
+      .then( () => message.delete() )
+      .then( console.error("askbox: asks will not be copied!") )
+    return;
+  }
+
+  let newContent = ``;
   if (
     !config.allowAnon || !containsAnon(message.content.trim(), config.anonPrefixes)
-  ) newContent.concat(`ask from \`${message.author.tag}\`:\n>>> `);
-  
-  newContent.concat(message.content);
+  ) newContent = `ask from \`${message.author.tag}\`:\n>>> `;
+  console.log(newContent);
+
+  newContent += message.content;
 
   if (config.sendToChId) {
     await message.client.channels.fetch(config.sendToChId)
-            .then(async ch => ch.send({content: newContent}))
+            .then(async ch => ch.send({
+              content: newContent,
+              //attachments: message.attachments
+            }))
   }
 
   if (config.ccToDM) {
     await message.client.getConfig().ownerIds.forEach(usrId => {
       message.client.users.fetch(usrId)
-        .then(usr => usr.send({content: newContent}))
+        .then(usr => usr.send({
+          content: newContent,
+          //attachments: message.attachments
+        }))
     })
   }
 

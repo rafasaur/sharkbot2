@@ -1,6 +1,6 @@
 
 module.exports = async (client) => {
-  require("../helpers/loadMessageExpansion")();
+  require("../helpers/extendMessage")();
 
   client.logReady(`log`);
 }

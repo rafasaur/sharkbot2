@@ -1,6 +1,6 @@
 module.exports = async (client) => {
 
-  require('../helpers/loadLvlExp')(client);
+  require('../helpers/extendGuildMember')(client);
 
   client.logReady(`levels`);
 };

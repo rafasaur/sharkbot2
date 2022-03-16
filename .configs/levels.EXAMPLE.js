@@ -9,6 +9,9 @@ module.exports = {
 
   // role ids of all level roles, from lowest to highest (0 - N)
   levelIds: [
-    
-  ]
+
+  ],
+
+  // number of days to consider for "recentMessages"
+  recentDays: 14
 }

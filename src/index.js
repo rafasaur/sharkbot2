@@ -1,6 +1,6 @@
 require('dotenv').config();
 const ClientPlus = require('./util/ClientPlus');
-const mainConfig = require('../.config/.bot');
+const mainConfig = require('../.configs/.bot');
 
 const client = new ClientPlus({
   intents: mainConfig.intents,
@@ -21,6 +21,7 @@ client.login(process.env.TOKEN).catch((error) => {
 });
 
 client.on("ready", async () => {
+  //await client.user.setStatus("you're telling me a queer coded me?");
   await client.user.setPresence({
     status: "online",
     activities: [{

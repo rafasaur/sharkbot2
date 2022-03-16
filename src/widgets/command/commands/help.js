@@ -12,7 +12,7 @@ module.exports = new CommandBuilder()
   .setCooldown(10)
   .setDisabled(false)
   .setExecute(async (message, user, args) => {
-    const config = message.client.getConfig();
+    const config = message.client.getConfig();//require('../../../../.config/command');
     const myId = config.ownerIds[0];
     const mainChannelId = config.mainChannelId;
     const welcomeChannelId = config.welcomeChannelId;

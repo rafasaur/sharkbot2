@@ -46,7 +46,7 @@ This feature designates a channel as a suggestion box. Messages sent there by no
 ## commands
 This feature is loaded automatically, and is the only one that cannot be deactivated (i.e., it does not require `active: true` in its config file). This is in part to have better legibility for commands which "belong" to specific features, but also because certain methods are created here which are on occasion used by other features (at this point most of these have probably been removed?). The default commands are detailed in the [commands readme](./COMMANDS.md).
 
-To add or remove commands, add or delete files from the `<path>/commands` folder in whichever widget the command can be found in, or the `commands` folder in root. **To be included**: slash commands, at some point. Most of the commands I've written require functionality that the new interactions no longer have, so I have not pursued implementing these myself.
+To add or remove commands, add or delete files from the `<widget>/commands` folder in whichever widget the command can be found in, or the `/commands` folder in root. **To be included**: slash commands, at some point. Most of the commands I've written require functionality that the new interactions no longer have, so I have not pursued implementing these myself.
 
 
 
@@ -74,7 +74,7 @@ In some ways an extension of `member-db`, this widget controls the level progres
 - `levelIds`: IDs of level roles, in order from lowest to highest
 
 ### rules
-Each `go##.js` has a `prep` (what to do/what values to re/set when the user gets to level *n*), a `check` (checking to see if the user can level from n to n+1), an `approve` (for if the checked leveling needs mod approval), and a `denied` (what happens if the leveling is denied by a mod). When a member is or is eligible for leveling, Sharkbot will post in the specified channel `levelLogChId`. Level IDs go in `/levels-config.js`, and should be ordered from lowest/least privileged to highest/most privileged.
+Each `go##.js` has a `prep` (what to do/what values to re/set when the user gets to level *n*), a `check` (checking to see if the user can level from n to n+1), an `approve` (for if the checked leveling needs mod approval), and a `denied` (what happens if the leveling is denied by a mod). When a member is or is eligible for leveling, Sharkbot will post in the specified channel `levelLogChId`. Level Ids go in `/levels-config.js`, and should be ordered from lowest/least privileged to highest/most privileged.
 
 
 
@@ -106,10 +106,10 @@ Rules are kept in a separate files for better read- and editability. Examples gi
 Again, the bones here are taken from a peterthehan widget, [reaction-role-bot](https://github.com/peterthehan/discord-reaction-role-bot). The implementation has been modified to keep the handlers clean, and almost all the functionality is now contained within the `ReactTracker` class.
 
 ### rules
-All rules are `.json` files in `.rules/reaction-roles`, where an example is given (filenames do not matter, just the extension).
+All rules are `.json` files in `/.rules/reaction-roles`, where an example is given (filenames do not matter, just the extension).
 - `messageId`: ID of the message to track
 - `channelId`: ID of the channel the message is in
-- `isUnique`: if this is set to `true`, users will only be allowed to react with one emoji (other reactions will be removed)
+- `isUnique`: if this is set to `true`, users will only be allowed to react with one emoji (other reactions will be removed). Roles will be set in accordance with the most recent reaction
 - `reactAgnostic`: if this is set to `true`, *any* reaction (not just ones in the role map) sent by a user will cause the user to be assigned *all* roles in the role map
 - `emojiRoleMap`: a Map, of one emoji (or valid emoji ID) to an Array of role IDs. The roles will be added or removed when a user reacts or un-reacts with the corresponding emoji
 
@@ -118,9 +118,29 @@ All rules are `.json` files in `.rules/reaction-roles`, where an example is give
 ## scryfall
 Based heavily on (the now outdated) [scryfall servo bot](https://github.com/scryfall/servo), but with better functionality and the ability to flip dual-faced cards (thanks to [iColtz](https://github.com/icoltz/discord-pages)). Search for any card with `[[card name]]`, or use Scryfall's search directly with `[[~search terms]]`.
 
-**To be included**: `[[!card]]` to display only the image and `[[?card]]` to send the formats in which the card is legal. Refer to [Scryfall](https://scryfall.com/docs/syntax) for search syntax documentation.
+**To be included**: `[[!card]]` to display only the image and `[[?card]]` to send the formats in which the card is legal. Refer to [Scryfall](https://scryfall.com/docs/syntax) for search syntax documentation. Use built-in Discord buttons to flip card instead of emoji.
+
+
+
+
+## shoutbox
+Similar to [askbox](#askbox), only the message is copied and sent to the same channel it was sent to originally before being deleted. Any message beginning with `!shout` will be copied, resent, and deleted from the channel.
+
+### config options
+- `shoutChIds`: Array of channel IDs in which to allow shouts
+- `ccToDM`: if `true`, sends a copy of all shouts to owner(s), with the original author's tag
+
 
 
 
 ## smooth
 Go ahead, try it. Smooth thyself. *Now in that delicious vintage flavour you know and love (and works...?)*
+
+
+
+
+## welcome
+Sends a (hopefully) helpful message whenever someone joins the server.
+
+### config options
+- `welcomeText`: text to send to new members

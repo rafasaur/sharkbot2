@@ -4,6 +4,7 @@ const {Client, Collection} = require('discord.js');
 
 function getFilenames(filepath) {
   return fs.readdirSync(path.resolve(__dirname, filepath))
+           .filter(filename => !filename.startsWith("~"))
            .map((filename) => filename.replace(/\.[^/.]+$/, ""));
   }
 
@@ -27,7 +28,7 @@ function runHandlers(handlers, ...eventArguments){
 
 module.exports = class ClientPlus extends Client {
   loadClientPlus() {
-    this._config = require(`../../.config/.bot`);
+    this._config = require(`../../.configs/.bot`);
     this.turnedOn = new Date();
     this._widgets = new Collection();
     let activeWidgetNames = this._loadActiveWidgets();
@@ -39,7 +40,7 @@ module.exports = class ClientPlus extends Client {
   getConfig(widgetName='') {
     if (['', 'bot', 'main'].includes(widgetName)) return this._config;
     else if (!this._widgets.has(widgetName)) {
-      console.log(`no config found for ${widgetName}`);
+      console.error(`\tno config found for ${widgetName}`);
       return false;
     }
     return this._widgets.get(widgetName);
@@ -48,7 +49,7 @@ module.exports = class ClientPlus extends Client {
   // config setter. Main config can never be altered (may be unnecessary, but kept for readability)
   setConfig(config) {
     if (!config || !this._widgets.has(config.name)) {
-      console.log(`no config found for ${config.name}`);
+      console.log(`\tno config found for ${config.name}`);
       return false;
     }
     this._widgets.set(config.name, config);
@@ -58,12 +59,12 @@ module.exports = class ClientPlus extends Client {
   // rules getter (from .rules folder)
   getRules(widgetName) {
     if (!widgetName || !this._widgets.has(widgetName)) {
-      console.log(`couldn't load rules for ${widgetName}!`);
+      console.log(`\tcouldn't load rules for ${widgetName}!`);
       return false;
     }
     const wCfg = this._widgets.get(widgetName);
     if (!wCfg.rules) {
-      console.log(`no rules found for ${widgetName}`);
+      console.log(`\tno rules found for ${widgetName}`);
       return false;
     }
     return wCfg.rules;
@@ -97,7 +98,14 @@ module.exports = class ClientPlus extends Client {
         return;
       }
 
-      // get corresponding widget config and add it to the Collection
+      // check if widget has a corresponding config
+      //  if not throw a warning and ignore it
+      //  otherwise add it to the Collection
+      if (!fs.existsSync(path.resolve(__dirname, `../../.configs/${name}.js`))) {
+        console.warn(`No config found for ${name}! Skipping...`);
+        return;
+      }
+
       const widgCfg = require(`../../.config/${name}`);
       widgCfg.name = name;
       this._widgets.set(name, widgCfg);
@@ -119,7 +127,10 @@ module.exports = class ClientPlus extends Client {
 
 
   _checkActiveWidget(widgetName) {
-    return (widgetName === 'command' || this._widgets.get(widgetName).active);
+    return (
+      widgetName === 'command' ||
+      ( this._widgets.has(widgetName) && this._widgets.get(widgetName).active )
+    );
   }
 
 
@@ -140,7 +151,7 @@ module.exports = class ClientPlus extends Client {
     let rules = new Collection();
     const pathName = path.resolve(__dirname,`../../.rules/${widgetName}`);
     fs.readdirSync(pathName)
-      //.filter(file => file.endsWith(fileExt))
+      .filter(file => !file.toLowerCase().includes('example'))
       .forEach(file => {
         rules.set(file.replace(path.extname(file),''), require(pathName+`/${file}`));
         //console.log(file.replace(path.extname(file), ''));

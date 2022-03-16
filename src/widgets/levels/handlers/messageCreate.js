@@ -3,8 +3,9 @@ module.exports = async (message) => {
   if (
     message.author.isUser() &&
     message.isUserMessage() &&
-    message.isFromTextChannel()
+    message.isFromGuildChannel()
   ){
-    message.member.updateFromMessage(message);
+    await message.member.updateFromMessage(message);
+    //console.log(message.member.data);
   }
 }

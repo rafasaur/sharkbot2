@@ -2,9 +2,11 @@ module.exports = async (client) => {
 
   require("../helpers/loadPrefixRegExp")(client);
   require("../helpers/loadCommands")(client);
-  require("../helpers/loadMessageHelpers")();
-  require("../helpers/loadUserHelpers")(client);
-  require("../helpers/loadMemberHelpers")();
+  require("../helpers/extendMessage")();
+  require("../helpers/extendUser")(client);
+  require("../helpers/extendGuildMember")();
+
+  await require("../helpers/loadSlashCommands")(client);
 
   client.logReady('command');
 };

@@ -2,12 +2,14 @@
 .git
 node_modules
 .env
+*.txt
 *.bak*
-.config/*
+.config*/*
 .rules/*/*
 assets/*/*
 
-**/tiktok-embed
+**/!*
+**/guild-files/*
 
 !*example*
 !*EXAMPLE*

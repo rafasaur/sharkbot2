@@ -20,7 +20,7 @@ module.exports = {
 
   // prefixes to use with commands. Messages must begin with commands to be used
   prefixes: [
-    "."
+    "!"
   ],
 
   // owner ids & tag. Special permissions granted (mostly for commands)
@@ -35,6 +35,11 @@ module.exports = {
   ignoredChannels: new Set([
 
   ]),
+
+  // slash commands will not be loaded in these guilds
+  slashlessGuild: [
+
+  ],
 
   // semi-depreciated for help command
   botAnnounceChId: "",

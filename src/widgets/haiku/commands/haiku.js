@@ -63,7 +63,7 @@ module.exports = new CommandBuilder()
   .setExecute(async (message, user, args) => {
     const config = message.client.getConfig('haiku');
     const arg0 = args.shift();
-    const chName = message.isFromTextChannel() ? `${message.channel.name}` : `${message.author.tag}'s DM`
+    const chName = message.isFromGuildChannel() ? `${message.channel.name}` : `${message.author.tag}'s DM`
 
     // pause haiku in a channel
     if (['pause','p','stop','off'].includes(arg0)) {

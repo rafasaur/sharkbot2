@@ -44,7 +44,18 @@ module.exports = new CommandBuilder()
 				.then(msg => console.log(`\t ${user.tag} self-affirmed! "${msg.content}"`));
 		}
 
-    message.react('❤️')
+    const ogr = await message.react('❤️');
+		const filter = (reaction, usr) => {
+			return (
+				!usr.bot &&
+				usr.id !== message.author.id &&
+				reaction === '❤️'
+			)
+		};
+		const collector = message.createReactionCollector({filter, time:60*60*1000});
+		collector.on("collect", (reaction, usr) => {
+		//	if (usr.id === usr.client.getConfig().ownerIds[0])
+		})
   })
 	.setHelp(async (message, user, args) => {
 		message.reply({content: "Affirm yourself & friends!"})

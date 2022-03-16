@@ -23,7 +23,7 @@ module.exports = {
     }
     await member.roles.add(idNext);
     member.roles.remove(idCurr);
-    member.data.lastLevelUp = new Date();
+    member.data.lastLevelUpDate = new Date();
     const level = member.data.level;
 
     const logMsg = `${member.user.tag} LEVEL UP (${level} -> ${level+1})`;
@@ -32,12 +32,14 @@ module.exports = {
               .then(ch => ch.send({content: logMsg}));
 
     await member.client.getRules('levels').get(`go${level+1}${level+2}`).prep(member);
+    member.data.levelUpAlerted = false;
     return ++member.data.level;
   },
 
 
   denied: async (member) => {
     await member.client.getRules('levels').get(`go${level}${level+1}`).denied(member);
+    member.data.levelUpAlerted = false;
     return;
   },
 };

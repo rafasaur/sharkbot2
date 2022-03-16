@@ -2,40 +2,21 @@
 
 Sharkbot is my attempt at a modular Discord bot, with a fair amount of functionality out of the box, and the ability to quickly and easily add/remove pieces as needed. In theory, one bot *could* be used across multiple Discord servers, but it is not currently written to do so effectively and it is very likely at least one thing will break.
 
-## Implemented features
-Currently, Sharkbot can:
-- [x] alarm clock
- - [x] a variety of sayings for default reminders
- - [x] randomly choose from a set of possible reminders
-- [x] assign/remove roles based on message reactions!
-- [x] react to messages, sometimes!
-- [x] post when people make accidental haiku!
-- [x] affirm your friends!
-  - [x] a variety of affirmations (please submit more!)
-- [x] smooth members...?
-  - [x] a smoother smoothing experience...?
-
-### In progress/to be implemented
-- [ ] the ability to add alarms...?
-- [ ] birthdays!
-- [ ] create polls
-  - [ ] with a time limit?
-  - [ ] choose your own emoji for polls?
-- [ ] twitch alerts
-- [ ] music streaming
-
 ## Overview
-The most recent update for Sharkbot finally uses Discord.js v13, which require some minor code updates to align with the new API. The file structure received a much more substantial reworking, to improve accessibility for commonly edited files, and readability overall.
+The most recent updates for Sharkbot finally use Discord.js v13, which required some minor code updates to align with the new API. The file structure received a much more substantial reworking, to improve accessibility for commonly edited files, and readability overall.
 
-Despite the new version of Discord.js allowing for "slash commands" to be easily implemented, I have not yet done so. The main reason for this is the way interactions are handled differently than messages breaks some finer functionality of commands I've currently implemented.
+Some commands are now available as slash commands! The main reason for some, not all, is that interactions are handled differently than messages, which breaks some finer functionality of commands I've currently implemented. Certain commands will be converted into slash commands, but others (namely, [affirm](docs/COMMANDS.md#affirm)) will remain "old school" by necessity.
+
+### Getting him up and running
+Just check out a copy, go through each `.config/<widget>.EXAMPLE.js` filling in blanks, and deleting the `.EXAMPLE` from the filename. Peruse to find other `EXAMPLE` files and make your own, or just delete them. Finally, replace `<your token here>` with your bot's token in `.env`. It should work immediately!
 
 ### Features & Commands
-Fine-grained documentation of Sharkbot's features (or "widgets") can be found in [that readme](docs/FEATURES.md), and likewise for [commands](docs/COMMANDS.md).
+Fine-grained documentation of Sharkbot's features (or "widgets") can be found in [that readme](docs/FEATURES.md), and likewise for the default [commands](docs/COMMANDS.md).
 
-All features are loaded via their folder in `/src/widgets`. All features require a `<feature>.cfg.js` file with `active: true` in the `/.config` folder. Any features with "rules" are loaded from their respective folder/files in `/.rules`.
+All features are loaded via their folder in `/src/widgets`. All features require, at minimum, a `<feature>.js` file with `active: true` in the `/.config` folder. Any features with "rules" are loaded from their respective folder/files in `/.rules`. Any features beginning with `~` in their name will not be loaded (by default, `~template` is the only one).
 
 ### alarms
-Send messages at specific times, according to cron rules. A certain amount of randomization is allowed.
+Send messages at specific times, according to [cron rules](https://crontab.cronhub.io/). A certain amount of randomization is allowed.
 
 ### askbox
 Designates a channel in the server to be an suggestion box. Messages sent there can be sent to a mod-only channel for private discussion, as well as deleting the original message for anonymity.
@@ -53,7 +34,7 @@ A mild moderation assistant. Assign roles based on how long people have been in 
 Allows for printing of all observed messages, and the CC-ing of DMs sent to the bot to the owner.
 
 ### member-db
-An attempt at keeping sustaining records through restarts.
+Persistent member data through restarts.
 
 ### message-reacts
 Perform certain actions based on contents of sent messages.
@@ -64,11 +45,14 @@ Assign roles based on members reacting to specified messages.
 ### scryfall
 A *magical* card info *gatherer*.
 
+### shoutbox
+Designate a channel to allow members to ask/shout things at the server anonymously.
+
 ### smooth
 Kick and re-invite members in one breath.
 
-### tiktok-embed
-Send TikTok URLs as embeds for easier viewing, and delete messages with overly long URLs.
+### welcome
+Send a welcome DM to new members.
 
 
 ## Resources and references
@@ -78,5 +62,11 @@ Sharkbot originally grew from the [Discord.JS guide](discordjs.guide), but I wan
 
 And of course the **biggest** thank you to everyone who's helped raise/test my son (Thad in particular) and answered my questions in the Discord.js discord.
 
-### Getting him up and running
-Just check out a copy, go through each `.config/<widget>.EXAMPLE.js` filling in blanks, and deleting the `.EXAMPLE` from the filename. Peruse to find other `EXAMPLE` files and make your own, or just delete them. Finally, replace `<your token here>` with your bot's token in `.env`, and it should work immediately!
+### In progress/to be implemented
+- [ ] the ability to add alarms...?
+- [ ] birthdays!
+- [ ] create polls
+  - [ ] with a time limit?
+  - [ ] choose your own emoji for polls?
+- [ ] twitch alerts
+- [ ] music streaming

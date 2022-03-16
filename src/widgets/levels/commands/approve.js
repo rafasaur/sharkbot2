@@ -12,7 +12,9 @@ module.exports = new CommandBuilder()
   .setDisabled(false)
   // eslint-disable-next-line
   .setExecute(async (message, user, args) => {
-    const thatMemId = args[0]; const theGuildId = args[1];
+    const thatMemId = args[0]; let theGuildId = args[1];
+    if (message.guildId && !theGuildId) theGuildId = message.guildId;
+
     if ( !thatMemId || !theGuildId ) {
       return message.reply({content:`Oops! You forgot either the member or guild ID.`});
     }
@@ -20,11 +22,11 @@ module.exports = new CommandBuilder()
     if ( !theGuild || !theGuild.available ) {
       return message.reply({content:`Hmm, that's not a real guild?`});
     }
-    const thatMem = theGuild.members.fetch(thatMemId);
+    const thatMem = await theGuild.members.fetch(thatMemId);
     if ( !thatMem ) {
       return message.reply({content:`I can't find that member!`});
     }
-    const wordOfPower = message.split(" ")[0].slice(1).lower();
+    const wordOfPower = message.content.split(" ")[0].slice(1).toLowerCase();
     let result;
     switch (wordOfPower) {
       case "approve":

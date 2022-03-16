@@ -24,7 +24,7 @@ module.exports = class Executable {
       this.command &&
       (!this.command.ownersOnly || this.user.isOwner()) &&
       (!this.command.modsOnly || this.message.member.isMod()) &&
-      (!this.command.guildOnly || this.message.isFromTextChannel()) &&
+      (!this.command.guildOnly || this.message.isFromGuildChannel()) &&
       (!this.command.requireArgs || this.args.length) &&
       !this.command.disabled &&
       !this.user.isOnCooldown(this.command)
@@ -32,7 +32,7 @@ module.exports = class Executable {
   }
 
   async execute() {
-    this.log();
+    //this.log();
     this.user.startCooldown(this.command);
     await this.command.execute(this.message, this.user, this.args);
   }

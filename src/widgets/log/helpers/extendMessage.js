@@ -7,13 +7,13 @@ module.exports = () => {
     const timestamp = new Date().toISOString();
     let authorLvl = '';
     if (
-      this.isFromTextChannel() &&
+      this.isFromGuildChannel() &&
       this.member.data
     ) authorLvl = ` (lvl ${this.member.data.level})`;
 
     const logMessage = [
       `${timestamp.substring(0, 10)} ${timestamp.substring(11, 19)}`,
-      this.isFromTextChannel()
+      this.isFromGuildChannel()
         ? `#${this.channel.name}`
         : "DM",
       `${this.author.tag}` + authorLvl + `: ${this.content}`
