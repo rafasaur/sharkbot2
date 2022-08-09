@@ -1,4 +1,5 @@
 const fs = require('fs'); const path = require('path');
+const { ChannelType } = require('discord.js')
 
 const randomInd = (len) => {
   return Math.floor(Math.random() * len);
@@ -20,14 +21,14 @@ module.exports = {
     client.incBJCount = (message) => {
       client.bjCount += message.content.match(/(beetle[\s\.\,\*\|]*juice)/igm).length;
       client.bjCount += message.content.match(/betelgeuse/igm).length;
-      console.log(client.bjCount);
+      console.log(`\twe've seen him ${client.bjCount} times...`);
       if (client.bjCount % 3 === 0) sendKeaton(message);
       return;
     }
   },
 
   ifs: (message, contentLowered) => {return (
-    message.channel.type === 'GUILD_TEXT' &&
+    message.isFromGuildChannel() &&
     !message.author.bot && (
       /beetle[\s\.\,\|\*]*juice/igm.test(contentLowered) ||
       /betelgeuse/igm.test(contentLowered)

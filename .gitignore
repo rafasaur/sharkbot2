@@ -8,12 +8,12 @@ node_modules
 .rules/*/*
 assets/*/*
 
-**/!*
-**/guild-files/*
+**/*!*
+**/guild-files/*.json
 
 !*example*
 !*EXAMPLE*
 
-!.rules/levels/go[0-1][1-2].js
+.rules/levels/go[0-1][1-2].js
 !assets/bj/bj0.gif
 !assets/weekend/theweekend.gif

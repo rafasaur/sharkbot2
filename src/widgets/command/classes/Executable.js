@@ -9,31 +9,32 @@ module.exports = class Executable {
   log() {
     const timestamp = new Date().toISOString();
     const logMessage = [
-      //`${timestamp.substring(0, 10)} ${timestamp.substring(11, 19)}`,
-      //this.message.isFromTextChannel()
-      //  ? `${this.message.guild} #${this.message.channel.name}`
-      //  : "DM",
-      `COMMAND CALLED: ${this.command.name} by ${this.user.tag}: ${this.message.content}`,
+      `\tTEXT COMMAND CALLED: ${this.command.name} by ${this.user.tag}`,
     ];
 
     console.log(logMessage.join(" | "));
   }
 
-  isExecutable() {
+  async isExecutable() {
+    const cooldownRemaining = this.user.isOnCooldown(this.command);
+    if (cooldownRemaining) {
+      await user.send(`You are on cooldown for this command for another ${cooldownRemaining} seconds!`);
+      return false;
+    }
+
     return (
       this.command &&
       (!this.command.ownersOnly || this.user.isOwner()) &&
       (!this.command.modsOnly || this.message.member.isMod()) &&
       (!this.command.guildOnly || this.message.isFromGuildChannel()) &&
       (!this.command.requireArgs || this.args.length) &&
-      !this.command.disabled &&
-      !this.user.isOnCooldown(this.command)
+      !this.command.disabled
     );
   }
 
   async execute() {
     //this.log();
-    this.user.startCooldown(this.command);
+    if (this.command.cooldown && this.command.cooldown > 0) this.user.startCooldown(this.command);
     await this.command.execute(this.message, this.user, this.args);
   }
 

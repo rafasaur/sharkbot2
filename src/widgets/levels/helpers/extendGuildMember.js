@@ -116,7 +116,7 @@ module.exports = (client) => {
     this.data.sentMessages++;
     this.updateRecentMessages(message);
     this.data.sentChannelSet.add(message.channel.id);
-    if (message.isCommand() && message.command.name === 'affirm') this.data.affirmCount++;
+    if (message.isTextCommand() && message.command.name === 'affirm') this.data.affirmCount++;
     this.checkLevelUp();
     if (logLevel && logLevel > 0 && this.data.sentMessageSet%logLevel === 0) console.log(this.data);
   };
@@ -132,7 +132,7 @@ module.exports = (client) => {
     else {
       //let removeDates = [];
       Object.entries(this.data.recentMessageObj).forEach(([date, count]) => {
-        if (messageTime - new Date(date).getTime() > recentTime) removeDates.push(date); {
+        if (messageTime - new Date(date).getTime() > recentTime) {//removeDates.push(date); 
           delete this.data.recentMessageObj[date];
         }
       });

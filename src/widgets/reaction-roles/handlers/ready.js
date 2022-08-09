@@ -1,6 +1,6 @@
 const fs = require('fs'); const path = require('path');
 const { Collection } = require('discord.js')
-const Reactor = require('../classes/ReactTracker');
+const Reactor = require('../classes/Reactor');
 
 module.exports = async (client) => {
 

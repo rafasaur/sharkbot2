@@ -2,6 +2,7 @@
 // checks if haiku should be attempted on a message, then attemps haiku
 
 const Haiku = require('../classes/Haiku');
+const { ChannelType } = require('discord.js');
 
 module.exports = async (message) => {
   const config = message.client.getConfig('haiku');
@@ -14,7 +15,7 @@ module.exports = async (message) => {
     config.tempChannels.has(message.channel.id) ||
     (
       Math.random() > frequency &&
-      message.channel.type !== 'dm' &&
+      message.channel.type !== ChannelType.DM &&
       !config.alwaysChannels.has(message.channel.id)
     )
   ) return;

@@ -1,5 +1,6 @@
 
 module.exports = async (messageReaction, user) => {
+  if (messageReaction.partial) await messageReaction.fetch();
   const config = user.client.getConfig('reaction-roles');
   if (
     user.bot || user.system ||

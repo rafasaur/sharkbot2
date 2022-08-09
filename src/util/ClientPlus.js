@@ -5,6 +5,7 @@ const {Client, Collection} = require('discord.js');
 function getFilenames(filepath) {
   return fs.readdirSync(path.resolve(__dirname, filepath))
            .filter(filename => !filename.startsWith("~"))
+           .filter(filename => !filename.startsWith("!"))
            .map((filename) => filename.replace(/\.[^/.]+$/, ""));
   }
 
@@ -106,7 +107,7 @@ module.exports = class ClientPlus extends Client {
         return;
       }
 
-      const widgCfg = require(`../../.config/${name}`);
+      const widgCfg = require(`../../.configs/${name}`);
       widgCfg.name = name;
       this._widgets.set(name, widgCfg);
 
@@ -153,7 +154,11 @@ module.exports = class ClientPlus extends Client {
     fs.readdirSync(pathName)
       .filter(file => !file.toLowerCase().includes('example'))
       .forEach(file => {
-        rules.set(file.replace(path.extname(file),''), require(pathName+`/${file}`));
+        let thisRule = require(pathName+`/${file}`);
+        thisRule.name = file.replace(path.extname(file),'');
+        rules.set(thisRule.name, thisRule);
+        //rules.set(file.replace(path.extname(file),''), require(pathName+`/${file}`));
+
         //console.log(file.replace(path.extname(file), ''));
       });
     return rules;

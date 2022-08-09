@@ -2,15 +2,15 @@ const cooldownCache = {};
 
 const MAX_DELAY = Math.pow(2, 31) - 1;
 
-const getCooldownKey = (user, command) => {
+function getCooldownKey(user, command) {
   return `${user.id}-${command.name}`;
 };
 
-const getCooldownInSeconds = (cooldown) => {
+function getCooldownInMs(cooldown) {
   return Math.min(cooldown * 1000, MAX_DELAY);
 };
 
-const getCooldownRemaining = (expirationDate) => {
+function getCooldownRemaining(expirationDate) {
   return ((expirationDate - Date.now()) / 1000).toFixed(1);
 };
 
@@ -25,8 +25,8 @@ module.exports = class CooldownCache {
       return;
     }
 
-    const cooldownInSeconds = getCooldownInSeconds(command.cooldown);
-    const expirationDate = Date.now() + cooldownInSeconds;
+    const cooldownInMs = getCooldownInMs(command.cooldown);
+    const expirationDate = Date.now() + cooldownInMs;
 
     cooldownCache[key] = expirationDate;
     setTimeout(() => delete cooldownCache[key], cooldownInSeconds);
@@ -42,9 +42,6 @@ module.exports = class CooldownCache {
       return false;
     }
 
-    const cooldownRemaining = getCooldownRemaining(cooldownCache[key]);
-    //user.send(`${command.name}: ${cooldownRemaining}s cooldown remaining`);
-
-    return true;
+    return getCooldownRemaining(cooldownCache[key]);
   }
 };

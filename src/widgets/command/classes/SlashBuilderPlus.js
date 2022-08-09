@@ -1,5 +1,5 @@
 
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = class SlashBuilderPlus extends SlashCommandBuilder {
   setOwnersOnly(ownersOnly) {
@@ -14,6 +14,11 @@ module.exports = class SlashBuilderPlus extends SlashCommandBuilder {
 
   setPushOption(pushOption) {
     this.pushOption = pushOption;
+    return this;
+  }
+
+  setCooldown(cooldown) {
+    this.cooldown = cooldown;
     return this;
   }
 }

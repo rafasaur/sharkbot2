@@ -2,7 +2,8 @@
 // class takes in message, checks for haiku, sends via calling sendHaiku() method
 // based on https://github.com/turt2live/matrix-haiku-bot
 
-const syllables = require('syllable');
+const syllableCount = require('../helpers/syllableCount');
+const { ChannelType } = require('discord.js');
 
 const emojiReg = /[<][0-9a-zA-Z\S]+[>]/g;
 const urlReg = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g;
@@ -47,7 +48,7 @@ module.exports = class Haiku {
       if (word.length === 0) continue; // skip any 0-length words from split()-ing
       if (word.search(/\d+/g) >= 0) return false; // syllable doesn't like digits
       if (ignoredRegs.some(reg => word.search(reg) >= 0) ) continue; // skip stuff we want to ignore
-      const wordSyllables = syllables(word.replace(/[^a-zA-Z]/g,'')); // a little ham-fisted, but good enough
+      const wordSyllables = syllableCount(word.replace(/[^a-zA-Z]/g,'')); // a little ham-fisted, but good enough
       if (wordSyllables === 0) return false; // just avoid unknown words
 
       if (lineSyllables + wordSyllables > form[currentLine]) return false; // not a haiku
@@ -73,7 +74,7 @@ module.exports = class Haiku {
     if (completedHaikuLines.length !== 3) { // fixes some weird edge cases
       let fixedLines = [];
       for (i = 0; i < 3; i++) {
-        if (syllables(completedHaikuLines[i]) !== form[i]) return false;
+        if (syllableCount(completedHaikuLines[i]) !== form[i]) return false;
         fixedLines.push(completedHaikuLines[i]);
       }
       completedHaikuLines = fixedLines;
@@ -98,18 +99,18 @@ module.exports = class Haiku {
     haikuText = haikuText.trim();
 
     this.channel.send({ content: `A haiku by ${this.author}:\n>>> ` + haikuText}).then(async msg => {
-      console.log(`haiku by ${this.author} sent!`);
-      if (this.channel.type === "DM") return;
+      console.log(`\thaiku by ${this.author.tag} sent!`);
+      if (this.channel.type === ChannelType.DM) return;
       const ogr = await msg.react('🚫');
       let repost = true;
       const filter = (reaction, user) => {
-        //return (!user.bot && user.id === this.author.id);
         if (user.bot) return false;
         if (user.id !== this.author.id) return false;
         else return true;
       }
       const collector = msg.createReactionCollector({filter, time:5*60*1000});
-      collector.on("collect", reaction => {
+      collector.on("collect", async reaction => {
+        if (reaction.partial) await reaction.fetch();
         if (reaction.emoji.name === '🚫') {msg.delete(); repost=false;}
       });
       collector.on("end", async () => {
@@ -117,7 +118,7 @@ module.exports = class Haiku {
         if (
           repost &&
           this.archiveChannelId && this.archiveChannelId.length > 0 &&
-          this.channel.type !== 'DM'
+          this.channel.type !== ChannelType.DM
         ) {
           const archiveChannel = await this.channel.guild.channels.fetch(this.archiveChannelId);
           archiveChannel.send(`A haiku by \`${this.author.tag}\`:\n>>> ` + haikuText);

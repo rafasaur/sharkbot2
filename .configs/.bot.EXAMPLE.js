@@ -5,17 +5,19 @@ module.exports = {
   // bot intents (typically use as few as necessary)
   intents: new Intents([
     Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_MEMBERS, // PRIVILEDGED, necessary for levels, db, welcome
     Intents.FLAGS.GUILD_INVITES,
     Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.MESSAGE_CONTENT, // PRIVILEDGED, necessary for many widgets (esp. commands)
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.DIRECT_MESSAGES
   ]),
 
-  // partials to enable. 'CHANNEL' (default) allows for DMs
+  /* partials to enable. 'CHANNEL' (default) allows for DMs, and
+    'REACTION' (default) allows tracking of reactions on old messages */
   partials: [
-    'CHANNEL'
+    'CHANNEL',
+    'REACTION'
   ],
 
   // prefixes to use with commands. Messages must begin with commands to be used
@@ -36,7 +38,7 @@ module.exports = {
 
   ]),
 
-  // slash commands will not be loaded in these guilds
+  // slash commands will not be loaded in these guilds (if glboal commands are enabled this is meaningless)
   slashlessGuild: [
 
   ],
