@@ -1,14 +1,17 @@
 ## Default commands
-#### affirm, /affirm
+#### affirm, `/affirm`
 `!affirm` will send the author a random affirmation from `/affirmations/affirmations.json`. Adding mentions (`@user`) after the command will send an affirmation to every member mentioned. I've considered also letting roles be @'d, but that seems dangerous.
 
-#### help, /help
+#### halloween, `/halloween`
+Let's you know if it's Halloween or not.
+
+#### help, `/help`
 `!help` sends a help message! Yep, that's it.
 
-#### roll, /roll
+#### roll, `/roll`
 A simple dice roller. Right now it'll roll whatever dice are listed (e.g., `!roll 2d4 3d6` would roll 2 d4's and 3 d6's) and give the sum. It might make more sense to do each group of dice individually, but also the user could just do that themself. It can also roll F\*rce and D\*stiny dice (e.g., 2dgreen 2dpurple)!
 
-#### weekend, /weekend
+#### weekend, `/weekend`
 It'll tell you if it's the weekend or not. Best paired with an enthusiastic gif.
 
 ## Askbox
@@ -36,6 +39,11 @@ Flips a flag on that can allow further level progression.
 
 #### points
 TBA...
+
+
+## Poll
+#### `/poll`
+Creates a "poll" and facilitates members in casting votes. Has options for multiple choice or yes/no(/maybe) polls, as well as a "time limit" after which a follow up post will be made with the results (the time limit can be no longer than 15 minutes, the longest Discord allows for following up on interactions).
 
 
 ## Shoutbox

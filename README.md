@@ -1,11 +1,11 @@
-# sharkbot (v2.13)
+# sharkbot (v2.14)
 
 Sharkbot is my attempt at a modular Discord bot, with a fair amount of functionality out of the box, and the ability to quickly and easily add/remove pieces as needed. In theory, one bot *could* be used across multiple Discord servers, but it is not currently written to do so effectively and it is very likely at least one thing will break.
 
 ## Overview
 The most recent updates for Sharkbot finally use Discord.js v13, which required some minor code updates to align with the new API. The file structure received a much more substantial reworking, to improve accessibility for commonly edited files, and readability overall.
 
-Some commands are now available as slash commands! The main reason for some, not all, is that interactions are handled differently than messages, which breaks some finer functionality of commands I've currently implemented. Certain commands will be converted into slash commands, but others (namely, [affirm](docs/COMMANDS.md#affirm)) will remain "old school" by necessity.
+Some commands are now available as slash commands! The main reason for some, not all, is that interactions are handled differently than messages, which breaks some finer functionality of commands I've currently implemented. Certain commands will be converted into slash commands, but others (namely [affirm](docs/COMMANDS.md#affirm)) will remain "old school" by necessity.
 
 ### Getting him up and running
 Just check out a copy, go through each `.config/<widget>.EXAMPLE.js` filling in blanks, and deleting the `.EXAMPLE` from the filename. Peruse to find other `EXAMPLE` files and make your own, or just delete them. Finally, replace `<your token here>` with your bot's token in `.env`. It should work immediately!
@@ -22,7 +22,7 @@ Send messages at specific times, according to [cron rules](https://crontab.cronh
 Designates a channel in the server to be an suggestion box. Messages sent there can be sent to a mod-only channel for private discussion, as well as deleting the original message for anonymity.
 
 ### command
-Allows for command usage (**not** slash commands, as reasoned above) and loaded by default, so each widget can have its own commands to increase readability.
+Allows for command usage (both old-school "text" commands as well as slash commands) and loaded by default, so each widget can have its own commands to increase readability. It may be worth mentioning in cases where a text command and a slash command have an identical function, the bulk of that code is pushed into a "shared" file.
 
 ### haiku
 Reformat and post messages that are haiku. Frequency & allowed channels can be adjusted.
@@ -39,10 +39,13 @@ Persistent member data through restarts.
 ### message-reacts
 Perform certain actions based on contents of sent messages.
 
+### poll
+Members can create polls, and Sharkbot will automatically react with relevant emoji to assist in "voting." Members can be notified of the results after a certain amount of time has passed.
+
 ### reaction-roles
 Assign roles based on members reacting to specified messages.
 
-### scryfall
+### scrycall
 A *magical* card info *gatherer*.
 
 ### shoutbox
@@ -65,8 +68,5 @@ And of course the **biggest** thank you to everyone who's helped raise/test my s
 ### In progress/to be implemented
 - [ ] the ability to add alarms...?
 - [ ] birthdays!
-- [ ] create polls
-  - [ ] with a time limit?
-  - [ ] choose your own emoji for polls?
 - [ ] twitch alerts
 - [ ] music streaming

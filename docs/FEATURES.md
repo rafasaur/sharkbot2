@@ -112,6 +112,10 @@ Rules are kept in a separate files for better read- and editability. Examples gi
 
 
 
+## poll 
+
+
+
 ## reaction-roles
 The bones here are taken from a peterthehan widget, [reaction-role-bot](https://github.com/peterthehan/discord-reaction-role-bot). The implementation has been modified to keep the handlers clean, and almost all the functionality is now contained within the `ReactTracker` class.
 
